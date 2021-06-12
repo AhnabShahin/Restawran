@@ -150,7 +150,7 @@
                 @if(session('LoggedUser'))
                 <div class="cart">
                     <div class="flex items-center">
-                        <a>Hello! - {{session('name')}}</a>
+                        <a href="{{route('user.profile')}}">Hello! - {{session('LoggedUserInfo.name')}}</a>
                     </div>
                 </div>
                 <div class="cart">
@@ -259,7 +259,7 @@
                                 @if(session('LoggedUser'))
                                 <div>
                                     <img src="{{asset('main/icons/cart.svg')}}" alt="">
-                                    <a href="#">{{session('name')}}</a>
+                                    <a href="{{route('user.profile')}}">{{session('LoggedUserInfo.name')}}</a>
                                 </div>
                                 <span class="divider">|</span>
                                 <div><a href="{{ route('user.logout')}}">Logout</a></div>
@@ -272,7 +272,7 @@
                                 <div>
 
                                     <img src="./icons/cart.svg" alt="">
-                                    <a href="#">{{session('LoggedAdminInfo.name')}}</a>
+                                    <a>{{session('LoggedAdminInfo.name')}}</a>
                                 </div>
                                 <span class="divider">|</span>
                                 <div><a href="{{ route('admin.logout')}}">Logout</a></div>

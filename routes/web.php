@@ -67,14 +67,17 @@ Route::post('user/password/reset/request',[UserController::class, 'reset_request
 Route::post('user/password/reset/form/{slug}',[UserController::class, 'reset'])->name('user.reset');
 Route::get('user/password/reset/form/{slug}',[UserController::class, 'reset_form'])->name('user.reset_form'); 
 Route::group(['middleware'=>['UserAuthCheck']],function(){
-    // Route::get('user/login',[UserController::class, 'login'])->name('user.login');
+    Route::get('user/profile',[UserController::class, 'profile'])->name('user.profile');
     Route::get('user/registration',[UserController::class, 'registration'])->name('user.registration');
     Route::get('user/logout',[UserController::class, 'logout'])->name('user.logout');
     Route::get('user/dashboard',[UserController::class, 'dashboard'])->name('user.dashboard');
     Route::get('user/card',[ItemsController::class, 'cardView'])->name('cardView');
+    Route::get('user/card/all-orders', [UserController::class,'allOrders'] )->name('user.allOrders');
+    Route::get('user/card/all-orders/order-details/{slug}', [UserController::class,'orderDetails'] )->name('user.orderDetails');
+    Route::get('user/order/tracking/{slug}',[ItemsController::class, 'tracking_details'])->name('tracking');
 });
 
 Route::get('{id}/{quantity}/add-to-card',[ItemsController::class, 'add_to_card'])->name('add_to_card');
 
-Route::get('/transaction', [PaymentController::class, 'index']);
-Route::post('/transaction', [PaymentController::class, 'makePayment'])->name('make-payment');
+Route::get('transaction', [PaymentController::class, 'index'])->name('make-payment');
+Route::post('transaction', [PaymentController::class, 'makePayment']);

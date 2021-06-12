@@ -49,6 +49,7 @@ class PaymentController extends Controller
 
         $order = new Order_list;
         $order->user_id = session('LoggedUser');
+        $order->invoice_no = time();
         $order->billing_email = $request->BillEmail;
         $order->billing_name = $request->BillName;
         $order->billing_address = $request->BillAddress;

@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\mail;
 use App\Mail\SendMail;
 use App\Models\User_password_reset;
+use App\Models\Order_details;
+use App\Models\Order_list;
+use App\Models\Item;
 
 class UserController extends Controller
 {
@@ -85,8 +88,8 @@ class UserController extends Controller
             if (Hash::check($request->password, $userInfo->password)) {
                 $request->session()->put('LoggedUser', $userInfo->id);
                 $userData= ['LoggedUserInfo' => User::where('id', '=', session('LoggedUser'))->first()->toArray()];
-                session($userData['LoggedUserInfo']);
-
+                session()->put('LoggedUserInfo',$userData['LoggedUserInfo']);
+               
                 return back()->with('success', 'Your successfully logged in');;
             } else {
                 return back()->with('IncorrctPassword', 'Your password Is Incorrect');
@@ -95,8 +98,9 @@ class UserController extends Controller
     }
     function logout()
     {
-        if (session()->has('LoggedUser')) {
+        if (session()->has('LoggedUser') && session()->has('LoggedUserInfo')) {
             session()->pull('LoggedUser');
+            session()->pull('LoggedUserInfo');
             return redirect('/');
         }
     }
@@ -195,6 +199,20 @@ class UserController extends Controller
         if ($request->password != $request->confirmPassword) {
             return view('user.password-reset', ['slug' => $slug, 'wrongpassword' => 'Password didt match']);
         }
+    }
+    function allOrders()
+    {
+        $Orders= Order_list::where([['user_id', '=',session('LoggedUser') ],['completed', '=', 0]])->get();
+        return view('user.all-orders')->with('Orders',$Orders);
+    }
+    function orderDetails(Request $request, $slug)
+    {
+        $OrderDetails= Order_details::where('order_id', '=',$slug)->get();
+        return view('user.order-details')->with('OrderDetails',$OrderDetails);
+    }
+    function profile(){
+        $allItem = Item::orderBy('id', 'DESC')->get();
+        return view('user.profile')->with('allItem',$allItem);
     }
 
 

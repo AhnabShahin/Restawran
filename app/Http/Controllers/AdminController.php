@@ -222,7 +222,7 @@ class AdminController extends Controller
     
     function allOrders()
     {
-        $Orders= Order_list::where('shipped', '=',0)->get();
+        $Orders= Order_list::where('completed', '=',0)->get();
         return view('admin.all-orders')->with('Orders',$Orders);
     }
     function orderDetails(Request $request, $slug)

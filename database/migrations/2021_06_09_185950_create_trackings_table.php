@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTrakingTable extends Migration
+class CreateTrackingsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateTrakingTable extends Migration
      */
     public function up()
     {
-        Schema::create('traking', function (Blueprint $table) {
+        Schema::create('trackings', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('order_id')->unsigned();
             $table->foreign('order_id')->references('id')->on('order_lists')->onUpdate('cascade')->onDelete('cascade');

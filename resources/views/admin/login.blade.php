@@ -55,7 +55,7 @@
 						</label>
 						<div class="clear"> </div>
 					</div>
-					<input type="submit" value="User-Login">
+					<input type="submit" value="Admin-Login">
 				</form>
 				<p>Don't have an Account? <a href="{{ route('admin.registration')}}"> Registration Now!</a></p>
 				<p>Fogot Password ?<a href="{{ route('admin.reset_request_get')}}"> Reset Now!</a></p>

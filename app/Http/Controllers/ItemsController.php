@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\Card_item;
+use App\Models\Order_list;
+use App\Models\Tracking;
 use Illuminate\Http\Request;
 
 class ItemsController extends Controller
@@ -123,4 +125,10 @@ class ItemsController extends Controller
         // dd($card_item);
         return view('user.add_to_card')->with('card_items',$card_item);
     }
+    function tracking_details($id){
+        $tracking_details= Tracking::where('id', '=',$id)->first()->toArray();
+     
+        return view('user.tracking')->with('tracking_details',$tracking_details);
+    }
 }
+

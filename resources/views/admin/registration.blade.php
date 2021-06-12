@@ -57,7 +57,7 @@
 						<div class="clear"> </div>
 					</div>
 					<span>@error('TermsAndConditions'){{$message}}@enderror</span>
-					<input type="submit" value="User-Login">
+					<input type="submit" value="Admin-Login">
 				</form>
 				<p>have an Account? <a href="{{ route('admin.login')}}"> Login Now!</a></p>
 			</div>

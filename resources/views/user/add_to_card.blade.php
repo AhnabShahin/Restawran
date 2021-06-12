@@ -4,6 +4,9 @@ $Bill = 0;
 
 use App\Models\Item; ?>
 <div class="add-to-card-container">
+<div class="mobile-logo">
+        <img src="{{asset('main/images/resturant.png')}}" alt="">
+    </div>
     <div class="container">
 
         <div class="add-to-card-container2">
@@ -110,7 +113,7 @@ use App\Models\Item; ?>
                 </script>
                 <h3 id="bill"> In Total Bill : {{$Bill}}</h3>
                 <div class="add-to-card flex justify-center">
-                    <a onclick="shippingForm()">Shipping Address</a>
+                    <a onclick="shippingForm()" href="{{route('make-payment')}}">CheckOut</a>
                 </div>
             </div>
         </div>

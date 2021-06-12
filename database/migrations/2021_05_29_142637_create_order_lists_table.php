@@ -18,6 +18,7 @@ class CreateOrderListsTable extends Migration
             $table->integer('user_id')->unsigned()->nullable();
             $table->foreign('user_id')->references('id')->on('users')
                   ->onUpdate('cascade')->onDelete('set null');
+            $table->string('invoice_no')->unique();
             $table->string('billing_email');
             $table->string('billing_name');
             $table->string('billing_address');

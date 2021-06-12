@@ -14,4 +14,8 @@ class Order_list extends Model
     public function Order_details(){
         $this->hasMany(Order_detail::class);
     }
+    public function tracking()
+    {
+        return $this->hasOne(Tracking::class);
+    }
 }
