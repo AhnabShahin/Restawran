@@ -17,10 +17,10 @@ use App\Models\Item; ?>
                 <div class="add-to-card-container-column001 flex-row-warp">
                     <div>
                         <!-- <input type="checkbox"><br> -->
-                        <img class="add-to-card-container-column001-cancel-img" src="{{ asset('main/icons/cancel.svg')}}">
+                        <a href="{{route('cardItemDelete',$card_item->id)}}"><img class="add-to-card-container-column001-cancel-img"src="{{ asset('main/icons/cancel.svg')}}"></a>
                     </div>
                     <img class="add-to-card-container-column001-item-img" src="{{ asset('main/images/plate-1.png')}}" alt="">
-                    <h3>{{$item->name}}</h3><br>
+                    <h3>{{$item->name}} </h3><br>
 
                     <h2> $ {{$item->price}}/-</h2>
 

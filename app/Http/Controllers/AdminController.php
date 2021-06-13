@@ -14,6 +14,7 @@ use App\Mail\SendMail;
 use App\Models\Admin_password_reset;
 use App\Models\Order_details;
 use App\Models\Order_list;
+use App\Models\Tracking;
 
 class AdminController extends Controller
 {
@@ -222,13 +223,50 @@ class AdminController extends Controller
     
     function allOrders()
     {
-        $Orders= Order_list::where('completed', '=',0)->get();
+        $Orders= Order_list::where('completed', '=',0)->with(['tracking'])->get();
+        // dd($Orders);
+        // // $phone = Order_list::find(1)->tracking;
+        // foreach ($Orders as $Order){
+        //     dd($Order->tracking);
+        // }
+        // dd($Orders);
         return view('admin.all-orders')->with('Orders',$Orders);
     }
     function orderDetails(Request $request, $slug)
     {
         $OrderDetails= Order_details::where('order_id', '=',$slug)->get();
         return view('admin.order-details')->with('OrderDetails',$OrderDetails);
+    }
+    function updateStatus($status,$id){
+        $v= Tracking::where('id',$id)->first();
+        // $v[$status]=1;
+        if($status=='processing'){
+            $v[$status]=1;
+            $v['prepared']=0;
+            $v['shipping']=0;
+            $v['received']=0;
+        }
+        if($status=='prepared'){
+            $v['processing']=1;
+            $v[$status]=1;
+            $v['shipping']=0;
+            $v['received']=0;
+        }
+        if($status=='shipping'){
+            $v['processing']=1;
+            $v['shipping']=1;
+            $v[$status]=1;
+            $v['received']=0;
+        }
+        if($status=='received'){
+            $v['processing']=1;
+            $v['shipping']=1;
+            $v['received']=1;
+            $v[$status]=1;
+        }
+        $v->save();
+        // dd($v);
+        return response()->json();
     }
 }
 

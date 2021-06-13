@@ -8,9 +8,9 @@
             <div class="flex justify-center">
                 <h3>Search Your Favourite Food Items</h3>
             </div>
-            <div id="search"> <input id="input" placeholder="Search...">
-                <a href="">
-                    <img src="icons/pizza.svg">
+            <div id="search"> <input id="input" value="" placeholder="Search...">
+                <a href="{{route('search-items')}}">
+                    <img src="{{ asset('main/icons/pizza.svg') }}">
                 </a>
             </div>
         </div>

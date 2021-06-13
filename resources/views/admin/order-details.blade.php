@@ -1,5 +1,8 @@
 @include("main.head")
 <div class="add-to-card-container">
+<div class="mobile-logo">
+        <img src="{{asset('main/images/resturant.png')}}" alt="">
+    </div>
     <div class="add-to-card-container2 justify-center">
         <div class="add-to-card-container-column001 flex-row-warp">
             <h3>Image</h3>

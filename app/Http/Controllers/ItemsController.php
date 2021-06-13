@@ -10,27 +10,29 @@ use Illuminate\Http\Request;
 
 class ItemsController extends Controller
 {
-    function items(){
+    function items()
+    {
         $allItem = Item::orderBy('id', 'DESC')->get();
-      
 
-        return view('main.all-items')->with('allItem',$allItem);
+
+        return view('main.all-items')->with('allItem', $allItem);
     }
-    function singleItemDetail($slug){
-;
+    function singleItemDetail($slug)
+    {;
         $itemInfo = Item::where('id', '=', $slug)->first();
-        $card_item= Card_item::where([['user_id', '=',session('LoggedUser') ],['item_id', '=', $slug]])->get();
-        if($card_item->count() == 1){
-            $card_item=$card_item->first();
-            $quantity=$card_item->quantity;
-        }else{
-            $quantity=1;
+        $card_item = Card_item::where([['user_id', '=', session('LoggedUser')], ['item_id', '=', $slug]])->get();
+        if ($card_item->count() == 1) {
+            $card_item = $card_item->first();
+            $quantity = $card_item->quantity;
+        } else {
+            $quantity = 1;
         }
-      
-        return view('main.single-item',['quantity'=>$quantity])->with('itemInfo',$itemInfo);
+
+        return view('main.single-item', ['quantity' => $quantity])->with('itemInfo', $itemInfo);
     }
 
-    function itemPostSave(Request $request){
+    function itemPostSave(Request $request)
+    {
         $request->validate([
 
             'name' => 'required',
@@ -39,21 +41,22 @@ class ItemsController extends Controller
             'price' => 'required',
 
         ]);
-        $item =new Item;
+        $item = new Item;
         $item->name = $request->name;
-        $newImageName=time().'-'.$request->name.'.'.$request->file('image')->extension();
-        $item->image_path=$newImageName;
-        $item->price= $request->price;
-        $item->details= $request->details;
-        $item->admin_id=session('LoggedAdmin');
+        $newImageName = time() . '-' . $request->name . '.' . $request->file('image')->extension();
+        $item->image_path = $newImageName;
+        $item->price = $request->price;
+        $item->details = $request->details;
+        $item->admin_id = session('LoggedAdmin');
         $item->save();
-        
-        $request->image->move(public_path('images/item'),$newImageName);
 
-        return redirect('admin/dashboard')->with('itemInsert','Item Is Successfully inserted');
+        $request->image->move(public_path('images/item'), $newImageName);
+
+        return redirect('admin/dashboard')->with('itemInsert', 'Item Is Successfully inserted');
     }
-    function itemEditSave(Request $request,$id){
-  
+    function itemEditSave(Request $request, $id)
+    {
+
         $request->validate([
 
             'name' => 'required',
@@ -64,71 +67,84 @@ class ItemsController extends Controller
         ]);
         $item = Item::where('id', '=', $id)->first();
         $item->name = $request->name;
-        $item->price= $request->price;
-        $item->details= $request->details;
-        $item->admin_id=session('LoggedAdmin');
+        $item->price = $request->price;
+        $item->details = $request->details;
+        $item->admin_id = session('LoggedAdmin');
 
-        if($request->file('image')!=null){
-           
+        if ($request->file('image') != null) {
+
             $request->validate([
                 'image' => 'required|mimes:jpg,jpeg,png|max:5048',
-                ]);
-            $newImageName=time().'-'.$request->name.'.'.$request->file('image')->extension();
-            $item->image_path=$newImageName;
-            $request->image->move(public_path('images/item'),$newImageName);
+            ]);
+            $newImageName = time() . '-' . $request->name . '.' . $request->file('image')->extension();
+            $item->image_path = $newImageName;
+            $request->image->move(public_path('images/item'), $newImageName);
         }
-       
-       
+
+
 
         $item->save();
 
-      
-        return redirect('admin/dashboard')->with('itemInsert','Item Is Successfully updated');
+
+        return redirect('admin/dashboard')->with('itemInsert', 'Item Is Successfully updated');
     }
-    function itemDelete($id){
+    function itemDelete($id)
+    {
         $item = Item::where('id', '=', $id)->first();
         $item->delete();
-        return redirect('admin/dashboard')->with('itemInsert','Item Is Successfully deleted');
+        return redirect('admin/dashboard')->with('itemInsert', 'Item Is Successfully deleted');
     }
-    function add_to_card($id,$quantity){
+    function add_to_card($id, $quantity)
+    {
         // dd($id,$quantity);
         $item = Item::find($id);
-        
-        $card_item= Card_item::where([['user_id', '=',session('LoggedUser') ],['item_id', '=', $id]])->get();
 
-      
-        if($card_item->count() == 1){
-            $card_item=$card_item->first();
-        
-            $card_item->quantity=$quantity;
-            $card_item->total_price=$quantity*$item->price;
+        $card_item = Card_item::where([['user_id', '=', session('LoggedUser')], ['item_id', '=', $id]])->get();
+
+
+        if ($card_item->count() == 1) {
+            $card_item = $card_item->first();
+
+            $card_item->quantity = $quantity;
+            $card_item->total_price = $quantity * $item->price;
             $card_item->save();
-        
+
 
             // dd($card_item);
-        }elseif($card_item->count() == 0){
-            $card_item= new Card_item;
-            $card_item->user_id=session('LoggedUser');
-            $card_item->item_id=$item->id;
-            $card_item->price=$item->price;
-            $card_item->quantity=$quantity;
-            $card_item->total_price=$item->price;
+        } elseif ($card_item->count() == 0) {
+            $card_item = new Card_item;
+            $card_item->user_id = session('LoggedUser');
+            $card_item->item_id = $item->id;
+            $card_item->price = $item->price;
+            $card_item->quantity = $quantity;
+            $card_item->total_price = $item->price;
             $card_item->save();
             // dd($card_item);
         }
-        $card_item= Card_item::where('user_id', '=',session('LoggedUser'))->get();
-        return response()->json(['addtocard'=>'Item successfully add to card','card_item'=>$card_item]);
+        $card_item = Card_item::where('user_id', '=', session('LoggedUser'))->get();
+        return response()->json(['addtocard' => 'Item successfully add to card', 'card_item' => $card_item]);
+    }
+    function cardView()
+    {
+        $card_item = Card_item::where('user_id', '=', session('LoggedUser'))->get();
+        $item_count=$card_item->count();
+        if($item_count==0){
+            return redirect('all-items')->with('success','Your card is empty. Please, add some items');
+        }else{
+            return view('user.add_to_card')->with('card_items', $card_item);
+        }
+        
+    }
+    function tracking_details($id)
+    {
+        $tracking_details = Tracking::where('id', '=', $id)->first()->toArray();
 
+        return view('user.tracking')->with('tracking_details', $tracking_details);
     }
-    function cardView(){
-        $card_item= Card_item::where('user_id', '=',session('LoggedUser'))->get();
-        // dd($card_item);
-        return view('user.add_to_card')->with('card_items',$card_item);
-    }
-    function tracking_details($id){
-        $tracking_details= Tracking::where('id', '=',$id)->first()->toArray();
-     
-        return view('user.tracking')->with('tracking_details',$tracking_details);
+    function cardItemDelete($id)
+    {
+        $value = Card_item::find($id);
+        $value->delete();
+        return redirect('user/card');
     }
 }
-

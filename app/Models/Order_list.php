@@ -8,14 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class Order_list extends Model
 {
     use HasFactory;
+    public function tracking()
+    {
+        return $this->hasOne(Tracking::class,'order_id');
+    }
     public function users(){
         return $this->belongsTo(User::class);
     }
     public function Order_details(){
         $this->hasMany(Order_detail::class);
     }
-    public function tracking()
-    {
-        return $this->hasOne(Tracking::class);
-    }
+
 }
