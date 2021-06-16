@@ -82,3 +82,5 @@ Route::group(['middleware' => ['UserAuthCheck']], function () {
     Route::get('transaction', [PaymentController::class, 'index'])->name('make-payment');
     Route::post('transaction', [PaymentController::class, 'makePayment']);
 });
+
+

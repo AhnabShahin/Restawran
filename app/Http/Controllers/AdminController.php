@@ -62,7 +62,7 @@ class AdminController extends Controller
                 'verification_slug' => $verification_slug,
             );
             $Template = 'admin.email-verification';
-            // Mail::to($request->email)->send(new SendMail($data,$Template));
+             Mail::to($request->email)->send(new SendMail($data,$Template));
 
             if ($save) {
                 return redirect('admin/login')->with('success', 'Hello! ' . $request->name . ' - A verification link is send on your email. Please verify your id first');
@@ -113,6 +113,7 @@ class AdminController extends Controller
     }
     function dashboard()
     {
+
         $allItem = Item::orderBy('id', 'DESC')->get();
         // dd($allItem);
         
@@ -140,10 +141,13 @@ class AdminController extends Controller
             $adminInfo->email_verification = 1;
             $adminInfo->save();
             $Admin_accounts_verification_Info->delete();
+            session()->put('LoggedAdmin', $adminInfo->id);
+            $adminData = ['LoggedAdminInfo' => Admin::where('id', '=', session('LoggedAdmin'))->first()->toArray()];
+            session()->put('LoggedAdminInfo',$adminData['LoggedAdminInfo']);
             return redirect('admin/dashboard');
         }
         if (!$Admin_accounts_verification_Info) {
-            return redirect('admin/dashboard');
+            return redirect('admin/login');
         }
     }
 
@@ -172,7 +176,7 @@ class AdminController extends Controller
             $admin_password_reset->password_reset_slug = $password_reset_slug;
             $admin_password_reset->save();
             $data = array(
-
+                'name'=>$adminInfo->name,
                 'email' => $request->email,
                 'password_reset_slug' => $password_reset_slug,
             );
@@ -214,6 +218,8 @@ class AdminController extends Controller
             $adminInfo->save();
             session()->put('LoggedAdmin', session('ResetAdminPassword'));
             session()->pull('ResetAdminPassword');
+            $adminData = ['LoggedAdminInfo' => Admin::where('id', '=', session('LoggedAdmin'))->first()->toArray()];
+            session()->put('LoggedAdminInfo',$adminData['LoggedAdminInfo']);
             return redirect('admin/dashboard');
         }
         if ($request->password != $request->confirmPassword) {
@@ -254,14 +260,14 @@ class AdminController extends Controller
         }
         if($status=='shipping'){
             $v['processing']=1;
-            $v['shipping']=1;
+            $v['prepared']=1;
             $v[$status]=1;
             $v['received']=0;
         }
         if($status=='received'){
             $v['processing']=1;
+            $v['prepared']=1;
             $v['shipping']=1;
-            $v['received']=1;
             $v[$status]=1;
         }
         $v->save();

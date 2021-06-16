@@ -1,4 +1,7 @@
 /* fonts  */
+
+
+
 @font-face {
     font-family:"Raleway-regular";
     src:url(../fonts/Raleway-Regular.ttf)
@@ -1260,6 +1263,7 @@ input::-webkit-inner-spin-button {
     height: 9rem;
     background-color: #fff;  
     border-radius: 10px;  
+    overflow: hidden;
 }
 .food-image img{
     height: 9rem;

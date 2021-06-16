@@ -1,4 +1,4 @@
-# Restawran | A resturent management systerm 
+# Restawran | Web site for restaurant startup. 
 <img src="https://github.com/AhnabShahin/Restawran/blob/main/public/main/images/resturant.png" >
 
 ## About

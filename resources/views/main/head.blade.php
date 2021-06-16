@@ -353,6 +353,7 @@
                                         <button id="log-button" class="button" type="submit"> Sign Up</button>
                                     </div>
                                 </form>
+                                <p>Fogot Password ?<a href="{{ route('user.reset_request_get')}}"><b> Reset Now!</b></a></p>
                             </div>
 
                             <script>

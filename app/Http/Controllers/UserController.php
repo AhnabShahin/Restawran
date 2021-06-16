@@ -59,7 +59,7 @@ class UserController extends Controller
                 'verification_slug' => $verification_slug,
             );
             $Template = 'user.email-verification';
-            // Mail::to($request->email)->send(new SendMail($data,$Template));
+           Mail::to($request->email)->send(new SendMail($data,$Template));
 
             if ($save) {
                
@@ -104,12 +104,7 @@ class UserController extends Controller
             return redirect('/');
         }
     }
-    function dashboard()
-    {
-        // dd(session('LoggedUser'));
-        $userData = ['LoggedUserInfo' => User::where('id', '=', session('LoggedUser'))->first()];
-        return view('user/dashboard', $userData);
-    }
+
 
     function account_verification($slug)
     {
@@ -120,10 +115,13 @@ class UserController extends Controller
             $userInfo->email_verification = 1;
             $userInfo->save();
             $User_accounts_verification_Info->delete();
-            return redirect('user/dashboard');
+            session()->put('LoggedUser', $userInfo->id);
+            $userData= ['LoggedUserInfo' => User::where('id', '=', session('LoggedUser'))->first()->toArray()];
+            session()->put('LoggedUserInfo',$userData['LoggedUserInfo']);
+            return redirect('user/profile');
         }
         if (!$User_accounts_verification_Info) {
-            return redirect('user/dashboard');
+            return redirect('/');
         }
     }
 
@@ -137,7 +135,7 @@ class UserController extends Controller
     {
 
         $request->validate([
-
+            
             'email' => 'required|email',
 
         ]);
@@ -152,12 +150,12 @@ class UserController extends Controller
             $user_password_reset->password_reset_slug = $password_reset_slug;
             $user_password_reset->save();
             $data = array(
-
+                'name'=>$userInfo->name,
                 'email' => $request->email,
                 'password_reset_slug' => $password_reset_slug,
             );
             $Template = 'user.password-reset-link';
-            // Mail::to($request->email)->send(new SendMail($data,$Template));
+            Mail::to($request->email)->send(new SendMail($data,$Template));
             return back()->with('link-send', 'link is send on your email account. ');
         }
         // return view('user.forgot-password');
@@ -194,7 +192,9 @@ class UserController extends Controller
             $userInfo->save();
             session()->put('LoggedUser', session('ResetUserPassword'));
             session()->pull('ResetUserPassword');
-            return redirect('user/dashboard');
+            $userData= ['LoggedUserInfo' => User::where('id', '=', session('LoggedUser'))->first()->toArray()];
+            session()->put('LoggedUserInfo',$userData['LoggedUserInfo']);
+            return redirect('user/profile');
         }
         if ($request->password != $request->confirmPassword) {
             return view('user.password-reset', ['slug' => $slug, 'wrongpassword' => 'Password didt match']);
@@ -211,10 +211,12 @@ class UserController extends Controller
         return view('user.order-details')->with('OrderDetails',$OrderDetails);
     }
     function profile(){
+
         $allItem = Item::orderBy('id', 'DESC')->get();
+        // dd($userData);
         return view('user.profile')->with('allItem',$allItem);
     }
 
 
-    
+
 }
