@@ -6,6 +6,7 @@ With this, a restaurant owner can sell his/her restaurant items easily. With thi
 ## Features
 * Custom  Authentication for users and Admin
 * Account verification with email.
+* Forgot password reset.
 * Difference type of appearance with the same email.
 * Admin Appearance. 
     * Items add
