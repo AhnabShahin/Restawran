@@ -2,7 +2,7 @@
 <img src="https://github.com/AhnabShahin/Restawran/blob/main/public/main/images/resturant.png" >
 
 ## About
-With this, a restaurant owner can sell his/her restaurant items easily. With this, a restaurant owner can sell his/her restaurant items easily.   
+With this, a restaurant owner can sell his/her restaurant items easily.
 ## Features
 * Custom  Authentication for users and Admin
 * Account verification with email.
