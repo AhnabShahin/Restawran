@@ -1,6 +1,6 @@
 # Restawran | Web site for restaurant startup. 
 tutui7
-<img src="https://github.com/AhnabShahin/Restawran/blob/main/public/main/images/resturant.png" >
+
 
 ## About
 With this, a restaurant owner can sell his/her restaurant items easily.
