@@ -52,6 +52,10 @@ Route::group(['middleware' => ['AdminAuthCheck']], function () {
     Route::get('admin/dashboard/all-orders', [AdminController::class, 'allOrders'])->name('allOrders');
     Route::get('admin/dashboard/all-orders/order-details/{slug}', [AdminController::class, 'orderDetails'])->name('orderDetails');
     Route::get('admin/dashboard/all-orders/order-details/update-status/{status}/{id}', [AdminController::class, 'updateStatus'])->name('updateStatus');
+    Route::post('about-us/update', [AdminController::class, 'updateAboutUs'])->name('updateAboutUs');
+    Route::post('daily-services/update', [AdminController::class, 'updateDailyServices'])->name('updateDailyServices');
+    Route::post('return-services/update', [AdminController::class, 'updateReturnServices'])->name('updateReturnServices');
+    Route::post('money_back-services/update', [AdminController::class, 'updateMoneyBackServices'])->name('updateMoneyBackServices');
 });
 
 
@@ -69,6 +73,7 @@ Route::post('user/password/reset/request', [UserController::class, 'reset_reques
 Route::post('user/password/reset/form/{slug}', [UserController::class, 'reset'])->name('user.reset');
 Route::get('user/password/reset/form/{slug}', [UserController::class, 'reset_form'])->name('user.reset_form');
 Route::group(['middleware' => ['UserAuthCheck']], function () {
+    Route::get('user/items/count', [UserController::class, 'itemsCount'])->name('itemsCount');
     Route::get('user/profile', [UserController::class, 'profile'])->name('user.profile');
     Route::get('user/registration', [UserController::class, 'registration'])->name('user.registration');
     Route::get('user/logout', [UserController::class, 'logout'])->name('user.logout');
@@ -81,6 +86,7 @@ Route::group(['middleware' => ['UserAuthCheck']], function () {
     Route::get('user/card/item-delete/{slug}', [ItemsController::class, 'cardItemDelete'])->name('cardItemDelete');
     Route::get('transaction', [PaymentController::class, 'index'])->name('make-payment');
     Route::post('transaction', [PaymentController::class, 'makePayment']);
+    Route::get('user/dashboard/all-orders/order-details/update-status/{status}/{id}', [UserController::class, 'trackingUpdateStatus'])->name('trackingUpdateStatus');
 });
 
 

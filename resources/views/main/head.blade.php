@@ -13,9 +13,9 @@
 
     <!-- Stripe -->
 
-    
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    
+
 </head>
 
 <body>
@@ -134,7 +134,7 @@
             {{$message}}
         </div>
         @enderror
-        
+
 
     </div>
 
@@ -266,8 +266,33 @@
                                 <span class="divider">|</span>
                                 <div>
                                     <img src="{{asset('main/icons/cart.svg')}}" alt="">
-                                    <a href="{{route('cardView')}}">0 Items - ($0.00)</a>
+                                    <a href="{{route('cardView')}}" id="count">0 Items -($0.00)</a>
                                 </div>
+                                <!-- <script>
+                                    $(document).ready(function() {
+                                        setInterval(getFeed, 1000);
+                                    });
+
+                                    function getFeed() {
+                                        $.ajaxSetup({
+                                            headers: {
+                                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                            }
+                                        });
+                                        $.ajax({
+
+                                            url: "{{route('itemsCount')}}", // Url to which the request is send
+                                            type: "GET", // Type of request to be send, called as method
+                                            data: "json",
+                                            success: function(data) // A function to be called if request succeeds
+                                            {
+                                                $('#count').html(data.cardItemsCount+' Items = $'+data.cardItemsPrice )
+                                         
+                                            }
+
+                                        });
+                                    }
+                                </script> -->
                                 @elseif(session('LoggedAdmin'))
                                 <div>
 

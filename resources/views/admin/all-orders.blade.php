@@ -8,6 +8,7 @@
         @foreach ($Orders as $Order)
         <?php 
         $processing=$prepared=$shipping=$received="";
+   
         if($Order->tracking->received== 1){
             $received="selected";
         }

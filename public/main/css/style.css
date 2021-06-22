@@ -222,6 +222,9 @@ body{
   .flex{
     display:flex;
   }
+  .flex-direction{
+      flex-direction: row;
+  }
   .justify-between{
     justify-content: space-between;
   }
@@ -346,6 +349,7 @@ header.hero p{
     margin-bottom:1rem;
 }
 .btn{
+    
     padding:0.75rem 0.75rem;
     border-radius:4px;
     -webkit-border-radius:4px;
@@ -1289,6 +1293,9 @@ input::-webkit-inner-spin-button {
 .margin-2rem{
     margin: 2rem 0;
 }
+.my-1{
+    margin: 1rem 0;
+}
 .margin-2remall{
     margin: 2rem;
 }
@@ -1454,6 +1461,7 @@ input::-webkit-inner-spin-button {
 }
 .profile-details{
     margin: 0 3rem;
+    width: 70%;
 }
 .profile-details h3{
     margin: 1rem 0;
@@ -1743,6 +1751,114 @@ height: 3rem;
     
     display: block;
 }
+/* The Modal (background) */
+  .modalAboutUs {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  .modalDailyServices{
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  .modalReturnServices{
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  .modalMoneyBackServicesBtn{
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  /* Modal Content/Box */
+  .modal-content {
+    background-color: #ee0047;
+    margin: 5% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid rgb(0, 0, 0);
+    width: 80%;
+    height: 80%; /* Could be more or less, depending on screen size */
+    display: flex;
+    flex-direction: column;
+   
+  }
+  
+  /* The Close Button */
+  .close {
+    color: rgb(0, 0, 0);
+    float: right;
+    font-size: 30px;
+    font-weight: bold;
+    text-align: end;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+ 
+  .modal-content input[type=text], select, textarea {
+      outline: none;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+  }
+  .modal-content textarea {
+  
+height: 50%;
+}
+.modal-content input{
+
+height: 10%;
+}
+.modal-content button{
+    margin: .5rem 0;
+height: 10%;
+width: 10rem;
+align-items: center;
+background:var(--heaven);
+color:var(--secondary); 
+border:1px solid var(--secondary);
+}
+.modal-content button:hover{
+    background:black;
+    color:var(--heaven); 
+}
+
 @media (max-width:992px){
 
     .add-to-card-container{

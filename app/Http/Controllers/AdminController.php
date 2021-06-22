@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Filesystem\Filesystem;
 
 use App\Models\Admin;
 use App\Models\Item;
@@ -15,6 +15,10 @@ use App\Models\Admin_password_reset;
 use App\Models\Order_details;
 use App\Models\Order_list;
 use App\Models\Tracking;
+use App\Models\About_us;
+use App\Models\Daily_service;
+use App\Models\Return_service;
+use App\Models\Money_back_service;
 
 class AdminController extends Controller
 {
@@ -28,7 +32,7 @@ class AdminController extends Controller
     }
     function save(Request $request)
     {
-     
+
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:admins',
@@ -37,17 +41,17 @@ class AdminController extends Controller
             'TermsAndConditions' => 'required',
             'image' => 'required|mimes:jpg,jpeg,png|max:5048',
         ]);
-      
+
 
         if ($request->password == $request->confirmPassword) {
             $admin = new Admin();
             $admin->name = $request->name;
             $admin->password = Hash::make($request->password);
             $admin->email = $request->email;
-            $newImageName=time().'-'.$request->email.'.'.$request->file('image')->extension();
-            $admin->image_path=$newImageName;
-            $request->image->move(public_path('images/admin'),$newImageName);
-            
+            $newImageName = time() . '-' . $request->email . '.' . $request->file('image')->extension();
+            $admin->image_path = $newImageName;
+            $request->image->move(public_path('images/admin'), $newImageName);
+
             $save = $admin->save();
 
             $admin_accounts_verification = new Admin_accounts_verification();
@@ -62,7 +66,7 @@ class AdminController extends Controller
                 'verification_slug' => $verification_slug,
             );
             $Template = 'admin.email-verification';
-             Mail::to($request->email)->send(new SendMail($data,$Template));
+            Mail::to($request->email)->send(new SendMail($data, $Template));
 
             if ($save) {
                 return redirect('admin/login')->with('success', 'Hello! ' . $request->name . ' - A verification link is send on your email. Please verify your id first');
@@ -87,15 +91,15 @@ class AdminController extends Controller
             return back()->with("EmailNotRecognize", "We don't recognize your email");
         } else {
             if (Hash::check($request->password, $adminInfo->password)) {
-                
+
                 session()->put('LoggedAdmin', $adminInfo->id);
                 $adminData = ['LoggedAdminInfo' => Admin::where('id', '=', session('LoggedAdmin'))->first()->toArray()];
-                session()->put('LoggedAdminInfo',$adminData['LoggedAdminInfo']);
+                session()->put('LoggedAdminInfo', $adminData['LoggedAdminInfo']);
                 $allItem = Item::orderBy('id', 'DESC')->get();
-               
+
                 // dd(session('LoggedAdminInfo'));
 
-                return view('admin/dashboard',$adminData)->with('allItem',$allItem);
+                return view('admin/dashboard', $adminData)->with('allItem', $allItem);
             } else {
                 return back()->with('IncorrctPassword', 'Your password Is Incorrect');
             }
@@ -106,22 +110,21 @@ class AdminController extends Controller
         if (session()->has('LoggedAdmin') && session()->has('LoggedAdminInfo')) {
             session()->pull('LoggedAdmin');
             session()->pull('LoggedAdminInfo');
-           
+
             return redirect('admin/login');
         }
-
     }
     function dashboard()
     {
 
         $allItem = Item::orderBy('id', 'DESC')->get();
         // dd($allItem);
-        
+
 
         // dd(session('LoggedAdmin'));
 
         // dd(session('LoggedAdminInfo'));
-        return view('admin/dashboard')->with('allItem',$allItem);
+        return view('admin/dashboard')->with('allItem', $allItem);
     }
     function send($name, $email)
     {
@@ -143,7 +146,7 @@ class AdminController extends Controller
             $Admin_accounts_verification_Info->delete();
             session()->put('LoggedAdmin', $adminInfo->id);
             $adminData = ['LoggedAdminInfo' => Admin::where('id', '=', session('LoggedAdmin'))->first()->toArray()];
-            session()->put('LoggedAdminInfo',$adminData['LoggedAdminInfo']);
+            session()->put('LoggedAdminInfo', $adminData['LoggedAdminInfo']);
             return redirect('admin/dashboard');
         }
         if (!$Admin_accounts_verification_Info) {
@@ -176,12 +179,12 @@ class AdminController extends Controller
             $admin_password_reset->password_reset_slug = $password_reset_slug;
             $admin_password_reset->save();
             $data = array(
-                'name'=>$adminInfo->name,
+                'name' => $adminInfo->name,
                 'email' => $request->email,
                 'password_reset_slug' => $password_reset_slug,
             );
             $Template = 'admin.password-reset-link';
-            Mail::to($request->email)->send(new SendMail($data,$Template));
+            Mail::to($request->email)->send(new SendMail($data, $Template));
             return back()->with('link-send', 'link is send on your email account. ');
         }
         // return view('admin.forgot-password');
@@ -219,60 +222,134 @@ class AdminController extends Controller
             session()->put('LoggedAdmin', session('ResetAdminPassword'));
             session()->pull('ResetAdminPassword');
             $adminData = ['LoggedAdminInfo' => Admin::where('id', '=', session('LoggedAdmin'))->first()->toArray()];
-            session()->put('LoggedAdminInfo',$adminData['LoggedAdminInfo']);
+            session()->put('LoggedAdminInfo', $adminData['LoggedAdminInfo']);
             return redirect('admin/dashboard');
         }
         if ($request->password != $request->confirmPassword) {
             return view('admin.password-reset', ['slug' => $slug, 'wrongpassword' => 'Password didt match']);
         }
     }
-    
+
     function allOrders()
     {
-        $Orders= Order_list::where('completed', '=',0)->with(['tracking'])->get();
+        $Orders = Order_list::where('completed', '=', 0)->with(['tracking'])->get();
         // dd($Orders);
         // // $phone = Order_list::find(1)->tracking;
         // foreach ($Orders as $Order){
         //     dd($Order->tracking);
         // }
         // dd($Orders);
-        return view('admin.all-orders')->with('Orders',$Orders);
+        return view('admin.all-orders')->with('Orders', $Orders);
     }
     function orderDetails(Request $request, $slug)
     {
-        $OrderDetails= Order_details::where('order_id', '=',$slug)->get();
-        return view('admin.order-details')->with('OrderDetails',$OrderDetails);
+        $OrderDetails = Order_details::where('order_id', '=', $slug)->get();
+        return view('admin.order-details')->with('OrderDetails', $OrderDetails);
     }
-    function updateStatus($status,$id){
-        $v= Tracking::where('id',$id)->first();
-        // $v[$status]=1;
-        if($status=='processing'){
-            $v[$status]=1;
-            $v['prepared']=0;
-            $v['shipping']=0;
-            $v['received']=0;
+    function updateStatus($status, $id)
+    {
+        dd($status, $id);
+        $v = Tracking::where('order_id', $id)->first();
+        if ($status == 'confirmed') {
+            $v[$status] = 1;
+            $v['processing'] = 0;
+            $v['prepared'] = 0;
+            $v['shipping'] = 0;
+            $v['received'] = 0;
         }
-        if($status=='prepared'){
-            $v['processing']=1;
-            $v[$status]=1;
-            $v['shipping']=0;
-            $v['received']=0;
+        if ($status == 'processing') {
+            $v[$status] = 1;
+            $v['prepared'] = 0;
+            $v['shipping'] = 0;
+            $v['received'] = 0;
         }
-        if($status=='shipping'){
-            $v['processing']=1;
-            $v['prepared']=1;
-            $v[$status]=1;
-            $v['received']=0;
+        if ($status == 'prepared') {
+            $v['processing'] = 1;
+            $v[$status] = 1;
+            $v['shipping'] = 0;
+            $v['received'] = 0;
         }
-        if($status=='received'){
-            $v['processing']=1;
-            $v['prepared']=1;
-            $v['shipping']=1;
-            $v[$status]=1;
+        if ($status == 'shipping') {
+            $v['processing'] = 1;
+            $v['prepared'] = 1;
+            $v[$status] = 1;
+            $v['received'] = 0;
         }
-        $v->save();
+        if ($status == 'received') {
+            $v['processing'] = 1;
+            $v['prepared'] = 1;
+            $v['shipping'] = 1;
+            $v[$status] = 1;
+            $v->order_list->completed = 1;
+            $v->order_list->save();
+        }
         // dd($v);
+        $v->save();
         return response()->json();
     }
-}
 
+    function updateAboutUs(Request $request)
+    {
+        $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'image' => 'required|mimes:jpg,jpeg,png|max:5048',
+        ]);
+        $newImageName = time() . '.' . $request->file('image')->extension();
+        About_us::updateOrCreate(
+            ['id' => 1],
+            [
+                'title' => $request->title,
+                'description' => $request->description,
+                'image_path' => $newImageName,
+               
+            ]
+        );
+        $file = new Filesystem;
+        $file->cleanDirectory(public_path('images/website/about-us'));
+        $request->image->move(public_path('images/website/about-us'), $newImageName);
+        return back()->with('success', "Successfully updated website's information");
+    }
+    function updateDailyServices(Request $request){
+        $request->validate([
+            'title' => 'required',
+            'description' => 'required'
+        ]);
+        Daily_service::updateOrCreate(
+            ['id' => 1],
+            [
+                'title' => $request->title,
+                'description' => $request->description,
+            ]
+        );
+        return back()->with('success', "Successfully updated website's information");
+    }
+    function updateReturnServices(Request $request){
+        $request->validate([
+            'title' => 'required',
+            'description' => 'required'
+        ]);
+        Return_service::updateOrCreate(
+            ['id' => 1],
+            [
+                'title' => $request->title,
+                'description' => $request->description,
+            ]
+        );
+        return back()->with('success', "Successfully updated website's information");
+    }
+    function updateMoneyBackServices(Request $request){
+        $request->validate([
+            'title' => 'required',
+            'description' => 'required'
+        ]);
+        Money_back_service::updateOrCreate(
+            ['id' => 1],
+            [
+                'title' => $request->title,
+                'description' => $request->description,
+            ]
+        );
+        return back()->with('success', "Successfully updated website's information");
+    }
+}

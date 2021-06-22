@@ -27,7 +27,7 @@
             <button class="slider-btn prev-btn"><img src="{{asset('main/icons/pre.svg')}}" alt=""></button>
             <button class="slider-btn next-btn"><img src="{{asset('main/icons/next.svg')}}" alt=""></button>
             <div class="food-slider">
-            @foreach ($allItem as $item)
+                @foreach ($allItem as $item)
                 <div class="food-card magic-shadow-sm">
                     <div class="product-image flex items-center justify-center">
                         <img src="{{ asset('images/item/'.$item['image_path']) }}" alt="">
@@ -43,17 +43,18 @@
                             <img src="{{asset('main/icons/star-grey.svg')}}" alt="">
                         </div>
                         <div class="price text-center">
-                        $ {{$item['price']}}
+                            $ {{$item['price']}}
                         </div>
                         <div class="flex justify-center">
                             <button>
                                 <img src="{{asset('main/icons/cart-2.svg')}}" alt="">
-                                <span>Add to cart</span>
+                                <span onclick="addToCard(<?php echo $item['id']; ?>,1)">Add to cart</span>
                             </button>
                         </div>
                     </div>
                 </div>
-            @endforeach
+                @endforeach
+
             </div>
             <div class="text-center btn-wrapper">
                 <a href="{{route('all-items')}}"><button class="btn btn-secondary">View More</button></a>
@@ -182,5 +183,29 @@
         </div>
     </div>
 </section>
+<script>
+
+        function addToCard(id, quantity) {
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                type: 'GET',
+                url: id+'/'+quantity + '/add-to-card',
+                dataType: 'json',
+                success: function(data) {
+                    $('#fixed').html('<div class="notification" id="cancel1" onclick="cancel(cancel1)"><img class="cancel" style="height:20px;" src="{{ asset("main/icons/cancel.svg")}}">' + data.addtocard + '</div>');
+
+                    setTimeout(() => {
+                        $('#cancel1').hide();
+                    }, 2000);
+
+                }
+            });
+        }
+    </script>
 
 @include("main.foot")

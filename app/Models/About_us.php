@@ -5,11 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Tracking extends Model
+class About_us extends Model
 {
     use HasFactory;
-    public function order_list()
-    {
-        return $this->belongsTo(Order_list::class,'order_id');
-    }
+    protected $fillable = ['id','title','description','image_path'];
 }

@@ -137,9 +137,9 @@ class ItemsController extends Controller
     }
     function tracking_details($id)
     {
-        $tracking_details = Tracking::where('id', '=', $id)->first()->toArray();
+        $tracking_details = Tracking::where('order_id', '=', $id)->first()->toArray();
 
-        return view('user.tracking')->with('tracking_details', $tracking_details);
+        return view('user.tracking',['order_id'=>$id])->with('tracking_details', $tracking_details);
     }
     function cardItemDelete($id)
     {

@@ -8,7 +8,7 @@ use App\Models\Card_item;
 use App\Models\Item;
 use App\Models\Order_list;
 use App\Models\Order_details;
-
+use App\Models\Tracking;
 use Stripe;
 use Session;
 use Stripe\Order;
@@ -64,6 +64,16 @@ class PaymentController extends Controller
         $order->payment_getway = "Stripe";
         $order->feedback = "";
         $order->save();
+
+        $tracking= new Tracking;
+        $tracking->order_id=$order->id;
+        $tracking->confirmed=1;
+        $tracking->processing=0;
+        $tracking->prepared=0;
+        $tracking->shipping=0;
+        $tracking->received=0;
+        $tracking->save();
+
        
         foreach ($card_items as $card_item) {
             $order_detail = new Order_details;

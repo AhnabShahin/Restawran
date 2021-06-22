@@ -41,6 +41,7 @@
 
                         </div>
                     </div>
+                    @if(session('LoggedUser'))
                     <div class="food-delivary">
                         <div class="flex items-center">
                             <img src="{{ asset('main/icons/price-tag.sv')}}'">
@@ -112,7 +113,7 @@
 
                         </div>
                     </div>
-
+                    @endif
                     <div class="food-caption">
                         <h3>Food Details</h3>
                         <hr>

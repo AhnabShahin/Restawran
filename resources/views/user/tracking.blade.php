@@ -32,7 +32,11 @@
             <h4>Your order is processing.</h4>
             <h4>Your order has been prepared. Its ready for shippping.</h4>
             <h4>Your order is on the way. Please wait sometime.</h4>
-            <h4>Did you received your order ? Then click yes . <button class="btn btn-secondary" id="yes">Yes</button></h4>
+            <h4>Did you received your order ? Then click yes . 
+            @if($tracking_details['received']  == 0 )
+            <button class="btn btn-secondary" id="yes">Yes</button>
+            @endif
+            </h4>
 
 
         </div>
@@ -47,6 +51,38 @@
             element01.classList.add("primary");
             var element02 = document.getElementById("Received-div");
             element02.classList.add("primary");
+            var element01 = document.getElementById("Processing");
+            element01.classList.add("primary");
+            var element02 = document.getElementById("Processing-div");
+            element02.classList.add("primary");
+            var element01 = document.getElementById("Prepared");
+            element01.classList.add("primary");
+            var element02 = document.getElementById("Prepared-div");
+            element02.classList.add("primary");
+            var element01 = document.getElementById("Shipping");
+            element01.classList.add("primary");
+            var element02 = document.getElementById("Shipping-div");
+            element02.classList.add("primary");
+
+          
+
+                var state='received';
+                var id= <?php echo $order_id ?>;
+                $.ajax({
+                    type: 'GET',
+                    url: "{{route('trackingUpdateStatus',['status' => 'received','id'=>$order_id])}}",
+                    dataType: 'json',
+                    success: function(data) {
+                        console.log('success!', data.order_id);
+                        $('#fixed').html('<div class="notification" id="cancel1" onclick="cancel(cancel1)"><img class="cancel" style="height:20px;" src="{{ asset("main/icons/cancel.svg")}}">Order status updated to ' + state + '</div>');
+
+                        setTimeout(() => {
+                            $('#cancel1').hide();
+                        }, 2000);
+
+                    }
+                });
+            
 
         });
     });

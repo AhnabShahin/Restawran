@@ -10,10 +10,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\mail;
 use App\Mail\SendMail;
+use App\Models\Card_item;
 use App\Models\User_password_reset;
 use App\Models\Order_details;
 use App\Models\Order_list;
 use App\Models\Item;
+use App\Models\Tracking;
 
 class UserController extends Controller
 {
@@ -215,6 +217,58 @@ class UserController extends Controller
         $allItem = Item::orderBy('id', 'DESC')->get();
         // dd($userData);
         return view('user.profile')->with('allItem',$allItem);
+    }
+    function itemsCount()
+    {
+        $carditems=Card_item::where('user_id',session('LoggedUser'))->get();
+        $cardItemsCount=0;
+        $cardItemsPrice=0;
+        foreach ($carditems as $carditem){
+        $cardItemsCount += $carditem->quantity;
+        $cardItemsPrice += $carditem->total_price;
+        }
+        return response()->json(['cardItemsCount' => $cardItemsCount, 'cardItemsPrice'=>$cardItemsPrice]);
+    }
+    function trackingUpdateStatus($status, $id)
+    {
+
+        $v = Tracking::where('order_id', $id)->first();
+        if ($status == 'confirmed') {
+            $v[$status] = 1;
+            $v['processing'] = 0;
+            $v['prepared'] = 0;
+            $v['shipping'] = 0;
+            $v['received'] = 0;
+        }
+        if ($status == 'processing') {
+            $v[$status] = 1;
+            $v['prepared'] = 0;
+            $v['shipping'] = 0;
+            $v['received'] = 0;
+        }
+        if ($status == 'prepared') {
+            $v['processing'] = 1;
+            $v[$status] = 1;
+            $v['shipping'] = 0;
+            $v['received'] = 0;
+        }
+        if ($status == 'shipping') {
+            $v['processing'] = 1;
+            $v['prepared'] = 1;
+            $v[$status] = 1;
+            $v['received'] = 0;
+        }
+        if ($status == 'received') {
+            $v['processing'] = 1;
+            $v['prepared'] = 1;
+            $v['shipping'] = 1;
+            $v[$status] = 1;
+            $v->order_list->completed = 1;
+            $v->order_list->save();
+        }
+        // dd($v);
+        $v->save();
+        return response()->json();
     }
 
 

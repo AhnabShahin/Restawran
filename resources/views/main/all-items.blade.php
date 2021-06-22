@@ -39,15 +39,17 @@
         <div class=" flex justify-center">
             <h3>${{$item['price']}}</h3>
         </div>
+        @if(session('LoggedUser'))
         <div class="add-to-card flex justify-center">
             <a onclick="addToCard(<?php echo $item['id']; ?>,1)"> Add To Card</a>
         </div>
+        @endif
     </div>
     @endforeach
     <script>
         $(document).ready(function() {
 
-            var list = $("#myList .all-food-card");
+            var list = $("#myList .all-food-card"); 
             var numToShow = 4;
             var button = $("#loadMore");
             var numInList = list.length;
@@ -88,7 +90,6 @@
 
                 }
             });
-
         }
     </script>
 
