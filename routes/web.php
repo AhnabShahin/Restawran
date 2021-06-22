@@ -21,7 +21,7 @@ use App\Http\Controllers\PaymentController;
 Route::get('/', [MainController::class, 'home'])->name('home');
 Route::get('/about', [MainController::class, 'about'])->name('about');
 Route::get('/all-items', [ItemsController::class, 'items'])->name('all-items');
-Route::get('/search-items', [ItemsController::class, 'search'])->name('search-items');
+Route::post('/search-items', [ItemsController::class, 'search'])->name('search-items');
 Route::get('{slug}/single-item-detail/', [ItemsController::class, 'singleItemDetail'])->name('singleItemDetail');
 Route::get('/blog', [MainController::class, 'blog'])->name('blog');
 Route::get('/services', [MainController::class, 'services'])->name('services');

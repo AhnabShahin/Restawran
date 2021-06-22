@@ -8,11 +8,15 @@
             <div class="flex justify-center">
                 <h3>Search Your Favourite Food Items</h3>
             </div>
-            <div id="search"> <input id="input" value="" placeholder="Search...">
-                <a href="{{route('search-items')}}">
-                    <img src="{{ asset('main/icons/pizza.svg') }}">
-                </a>
-            </div>
+            <form method="post" action="{{route('search-items')}}">
+                <div id="search">
+                    @csrf
+                    <input id="input" name="search" value="" placeholder="Search...">
+                    
+                        <button type="submit"><img  src="{{ asset('main/icons/pizza.svg') }}"></button>
+              
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -49,7 +53,7 @@
     <script>
         $(document).ready(function() {
 
-            var list = $("#myList .all-food-card"); 
+            var list = $("#myList .all-food-card");
             var numToShow = 4;
             var button = $("#loadMore");
             var numInList = list.length;
@@ -79,7 +83,7 @@
             });
             $.ajax({
                 type: 'GET',
-                url: id+'/'+quantity + '/add-to-card',
+                url: id + '/' + quantity + '/add-to-card',
                 dataType: 'json',
                 success: function(data) {
                     $('#fixed').html('<div class="notification" id="cancel1" onclick="cancel(cancel1)"><img class="cancel" style="height:20px;" src="{{ asset("main/icons/cancel.svg")}}">' + data.addtocard + '</div>');
